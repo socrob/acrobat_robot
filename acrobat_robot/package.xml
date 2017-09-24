@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package>
+        
+    <name>acrobat_robot</name>
+    
+    <version>1.0.0</version>
+    <description>
+        acrobat robot metapackage.
+        An acrobat robot is a single link, single joint robot.
+        Its objective is to balance on a upper position.
+        
+        It can do it with control, but in this sets of packages
+        we want to do it with reinforcement learning.
+    </description>
+    
+    <license>GPLv3</license>
+
+    <author email="olima@isr.tecnico.ulisboa.pt">Oscar Lima</author>
+    <maintainer email="olima@isr.tecnico.ulisboa.pt">Oscar Lima</maintainer>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <export>
+        <metapackage/>
+    </export>
+</package>

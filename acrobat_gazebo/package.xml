@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+    
+    <name>acrobat_gazebo</name>
+    <version>1.0.0</version>
+    <description>
+        World and launch files to bringup the acrobat robot in Gazebo 7 simulator
+        Tested under Ubuntu 16.04 and ROS kinetic
+    </description>
+    
+    <maintainer email="olima@isr.tecnico.uliboa.pt">Oscar Lima</maintainer>
+
+    <license>GPLv3</license>
+
+    <author email="olima@isr.tecnico.uliboa.pt">Oscar Lima</author>
+
+    <!-- build dependencies -->
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <!-- run dependencies -->
+    <run_depend>gazebo_plugins</run_depend>
+    <run_depend>gazebo_ros</run_depend>
+    <run_depend>gazebo_ros_control</run_depend>
+    <run_depend>acrobat_control</run_depend>
+    <run_depend>acrobat_description</run_depend>
+    <run_depend>xacro</run_depend>
+
+</package>

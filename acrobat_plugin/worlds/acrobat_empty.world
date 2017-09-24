@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+
+    <world name="acrobat_empty_world">
+        <!-- ground -->
+        <include>
+            <uri>model://ground_plane</uri>
+        </include>
+
+        <!-- sun -->
+        <include>
+            <uri>model://sun</uri>
+        </include>
+
+        <!-- reference to your plugin -->
+        <plugin name="acrobat_plugin" filename="libacrobat_plugin.so"/>
+    </world>
+
+</sdf>

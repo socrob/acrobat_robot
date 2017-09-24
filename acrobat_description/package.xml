@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+    
+    <name>acrobat_description</name>
+    <version>0.0.0</version>
+    <description>
+        URDF model for the acrobat robot.
+        Includes Gazebo tags that allow the acrobat robot to be used in
+        the Gazebo 7 simulator.
+        
+        tested under ubuntu 16.04 and ROS kinetic
+    </description>
+
+    <maintainer email="olima@isr.tecnico.ulisboa.pt">Oscar Lima</maintainer>
+
+    <license>GPLv3</license>
+
+    <author email="olima@isr.tecnico.ulisboa.pt">Oscar Lima</author>
+
+    <!-- build dependencies -->
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <!-- run dependencies -->
+    <run_depend>joint_state_publisher</run_depend>
+    <run_depend>robot_state_publisher</run_depend>
+    <run_depend>rviz</run_depend>
+
+</package>

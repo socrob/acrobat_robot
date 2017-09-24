@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package>
+    <name>acrobat_plugin</name>
+    <version>1.0.0</version>
+    <description>
+        This plugin moves the acrobat by exerting a force on it based on input topic.
+        In other words subscribes to a topic "force" and interacts with gazebo trough
+        this plugin to move the acrobat robot.
+    </description>
+
+    <maintainer email="olima@isr.tecnico.ulisboa.pt">Oscar Lima</maintainer>
+
+    <license>GPLv3</license>
+
+    <author email="olima@isr.tecnico.uliboa.pt">Oscar Lima</author>
+    
+    <!-- build dependencies -->
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>gazebo_ros</build_depend>
+    <build_depend>roscpp</build_depend>
+
+    <!-- run dependencies -->
+    <run_depend>gazebo_ros</run_depend>
+    <run_depend>roscpp</run_depend>
+
+    <export>
+        <gazebo plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" />
+    </export>
+
+</package>
