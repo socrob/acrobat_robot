@@ -6,29 +6,27 @@ Gazebo ROS Acrobat balancing robot
 
 Test your learning algorithms with this balancing 1 link 1 joint robot.
 
-It can also be used as an example on how to create the simplest robot posible
+It can also be used as an example on how to create a simple 1 joint robot
 with Gazebo and ros control.
 
-It also contains an example of how to create a simple plugin to exert a force on a robot joint.
+It also contains an example of how to create a simple plugin to exert a force on the robot joint.
+
+![alt gazebo_acrobat_robot](https://github.com/socrob/acrobat_robot/blob/kinetic/doc/gazebo_acrobat_robot.png "Gazebo acrobat 1 joint robot")
 
 Quick Start
 ===
 
-Rviz:
-
-    roslaunch acrobat_description acrobat_rviz.launch
-
-Gazebo:
+Run acrobat robot Gazebo simulation:
 
     roslaunch acrobat_gazebo acrobat_world.launch
 
-ROS Control:
+Publish desired joint effort on topic:
 
-    roslaunch acrobat_control acrobat_control.launch
+    rostopic pub /acrobat/joint1/effort/command std_msgs/Float32 "data: 5.0"
 
-Example of Moving Joints:
+Access acrobat joint1 angle:
 
-    rostopic pub /acrobat/joint1_position_controller/command std_msgs/Float64 "data: -0.4"
+    rostopic echo /acrobat/joint1/angle
 
 Credits: Partially based on the rrbot Gazebo tutorial, located under
 ===

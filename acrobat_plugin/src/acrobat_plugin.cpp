@@ -57,12 +57,12 @@ void AcrobatJointPlugin::Load(gazebo::physics::ModelPtr parent, sdf::ElementPtr 
 
     // Create our ROS node. This acts in a similar manner to the Gazebo node
     // with code from http://gazebosim.org/tutorials?cat=guided_i&tut=guided_i6
-    AcrobatJointPlugin::rosNode.reset(new ros::NodeHandle("gazebo_client"));
+    AcrobatJointPlugin::rosNode.reset(new ros::NodeHandle("acrobat"));
 
     // Create a named topic, and subscribe to it
     ros::SubscribeOptions so =
     ros::SubscribeOptions::create<std_msgs::Float32>(
-        "acrobat_joint_effort_command",
+        "joint1/effort/command",
         1,
         boost::bind(&AcrobatJointPlugin::OnRosMsg, this, _1),
         ros::VoidPtr(), &this->rosQueue);
@@ -74,8 +74,8 @@ void AcrobatJointPlugin::Load(gazebo::physics::ModelPtr parent, sdf::ElementPtr 
     std::thread(std::bind(&AcrobatJointPlugin::QueueThread, this));
 
     // publisher setup
-    this->nh_ = new ros::NodeHandle("");
-    this->acrobat_joint_angle_publisher_ = this->nh_->advertise<std_msgs::Float32>(std::string("topic_name"), 1);
+    this->nh_ = new ros::NodeHandle("acrobat");
+    this->acrobat_joint_angle_publisher_ = this->nh_->advertise<std_msgs::Float32>(std::string("joint1/angle"), 1);
 }
 
 // Called by the world update start event
