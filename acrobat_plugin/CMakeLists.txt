@@ -4,6 +4,7 @@ project(acrobat_plugin)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   gazebo_ros
+  std_msgs
 )
 
 # Depend on system install of Gazebo
@@ -18,6 +19,7 @@ catkin_package(
   CATKIN_DEPENDS
     roscpp
     gazebo_ros
+    std_msgs
   LIBRARIES ${PROJECT_NAME}
 )
 

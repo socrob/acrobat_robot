@@ -1,3 +1,17 @@
+/*
+ * Copyright [2017] <Instituto Superior Tecnico>
+ *
+ * Author: Oscar Lima (olima@isr.tecnico.ulisboa.pt)
+ *
+ * Gazebo plugin to exert a force on the acrobat single joint based on input topic.
+ *
+ * Input: This node subcribes to: /gazebo_client/acrobat_joint_effort_command (std_msgs::Float32)
+ *        Will exert that force on the joint (acrobat joint1, which is the only joint that the robot has)
+ *
+ * Output: Will communicate with the Gazebo robot and will apply that force to your joint
+ *
+ */
+
 #include <acrobat_plugin/acrobat_plugin.h>
 
 AcrobatJointPlugin::~AcrobatJointPlugin()
@@ -58,6 +72,10 @@ void AcrobatJointPlugin::Load(gazebo::physics::ModelPtr parent, sdf::ElementPtr 
     // Spin up the queue helper thread.
     AcrobatJointPlugin::rosQueueThread =
     std::thread(std::bind(&AcrobatJointPlugin::QueueThread, this));
+
+    // publisher setup
+    this->nh_ = new ros::NodeHandle("");
+    this->acrobat_joint_angle_publisher_ = this->nh_->advertise<std_msgs::Float32>(std::string("topic_name"), 1);
 }
 
 // Called by the world update start event
@@ -77,13 +95,11 @@ void AcrobatJointPlugin::Update()
     // set force to the value received by topic
     sim_joints_[0]->SetForce(0, effort_);
 
-    // store acrobat joint in member variable
+    // publish acrobat joint angle
+    std_msgs::Float32 angle_msg;
     // ROS_INFO_STREAM( "angle : " << sim_joints_[0]->GetAngle(0).Radian());
-    sim_joints_[0]->GetAngle(0).Radian();
-
-    //TODO: publish joint angle
-    // hint: follow http://gazebosim.org/tutorials?tut=custom_messages#CMakeListsforPluginandExecutable
-    // and: http://answers.gazebosim.org/question/15288/gazebo-node-cannot-see-gazebo-topic-need-help-understanding-why/
+    angle_msg.data = sim_joints_[0]->GetAngle(0).Radian();;
+    this->acrobat_joint_angle_publisher_.publish(angle_msg);
 }
 
 // Handle an incoming message from ROS
