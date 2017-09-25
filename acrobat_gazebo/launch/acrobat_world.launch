@@ -26,7 +26,15 @@
     <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner" respawn="false" output="screen"
         args="-urdf -model acrobat -param robot_description" />
     
-    <!-- ros_control acrobat, joint position controller using ros control -->
-    <!--include file="$(find acrobat_control)/launch/acrobat_control.launch" /-->
+    <!-- convert joint states to TF transforms for rviz, etc -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher"
+          name="robot_state_publisher" output="screen" />
+
+    <!-- tf echo between goal_link and link3, then publish euclidean distance -->
+    <node pkg="acrobat_reward_calculation" type="tf_euclidean_distance"
+          name="tf_euclidean_distance_node" output="screen" >
+        <param name="target_frame_id" value="goal_link" />
+        <param name="reference_frame_id" value="link3" />
+    </node>
 
 </launch>

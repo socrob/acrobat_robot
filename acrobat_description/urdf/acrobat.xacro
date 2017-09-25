@@ -8,7 +8,6 @@
   <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
   <xacro:property name="height1" value="2" /> <!-- Link 1 -->
   <xacro:property name="height2" value="1" /> <!-- Link 2 -->
-  <xacro:property name="height3" value="1" /> <!-- Link 3 -->
   <xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
   <xacro:property name="axel_offset" value="0.05" /> <!-- Space btw top of beam and the each joint -->
 
@@ -63,35 +62,56 @@
   <!-- Acrobat green link -->
   <link name="link2">
     <collision>
-      <origin xyz="0 0 ${height3/2 - axel_offset}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
       <geometry>
-        <box size="${width} ${width} ${height3}"/>
+        <box size="${width} ${width} ${height2}"/>
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 ${height3/2 - axel_offset}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
       <geometry>
-        <box size="${width} ${width} ${height3}"/>
+        <box size="${width} ${width} ${height2}"/>
       </geometry>
       <material name="green"/>
     </visual>
 
     <inertial>
-      <origin xyz="0 0 ${height3/2 - axel_offset}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
       <mass value="${mass}"/>
       <inertia
-          ixx="${mass / 12.0 * (width*width + height3*height3)}" ixy="0.0" ixz="0.0"
-          iyy="${mass / 12.0 * (height3*height3 + width*width)}" iyz="0.0"
+          ixx="${mass / 12.0 * (width*width + height2*height2)}" ixy="0.0" ixz="0.0"
+          iyy="${mass / 12.0 * (height2*height2 + width*width)}" iyz="0.0"
           izz="${mass / 12.0 * (width*width + width*width)}"/>
     </inertial>
   </link>
 
   <joint name="camera_joint" type="fixed">
     <axis xyz="0 1 0" />
-    <origin xyz="${camera_link} 0 ${height3 - axel_offset*2}" rpy="0 0 0"/>
+    <origin xyz="${camera_link} 0 ${height2 - axel_offset*2}" rpy="0 0 0"/>
     <parent link="link2"/>
     <child link="camera_link"/>
+  </joint>
+
+  <!-- dummy link to get a tf at the end of link2 -->
+  <link name="link3" />
+
+  <!-- dummy fixed joint to get a tf at the end of link2 (for reward calculation purposes -> learning stuff) -->
+  <joint name="link3_joint" type="fixed">
+    <axis xyz="0 0 1" />
+    <origin xyz="0 0 ${height2}" rpy="0 0 0"/>
+    <parent link="link2"/>
+    <child link="link3"/>
+  </joint>
+
+  <!-- if link3 matches exactly with this one, then reward of the acrobat is maximum -->
+  <link name="goal_link" />
+
+  <joint name="goal_link_joint" type="fixed">
+    <axis xyz="0 0 1" />
+    <origin xyz="0 ${width} ${height1 + height2 - axel_offset}" rpy="0 0 0"/>
+    <parent link="link1"/>
+    <child link="goal_link"/>
   </joint>
 
   <!-- Camera -->

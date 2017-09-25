@@ -28,6 +28,10 @@ Access acrobat joint1 angle:
 
     rostopic echo /acrobat/joint1/angle
 
+Access acrobat reward function based on euclidean distance (NEW feature!):
+
+    rostopic echo /tf_euclidean_distance_node/euclidean_distance
+
 Credits: Partially based on the rrbot Gazebo tutorial, located under
 ===
 
