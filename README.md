@@ -11,7 +11,7 @@ with Gazebo and ros control.
 
 It also contains an example of how to create a simple plugin to exert a force on the robot joint.
 
-![alt gazebo_acrobat_robot](https://github.com/socrob/acrobat_robot/blob/kinetic/doc/gazebo_acrobat_robot.png "Gazebo acrobat 1 joint robot")
+![alt gazebo_acrobat_robot](https://github.com/socrob/acrobat_robot/blob/kinetic/gazebo_acrobat_robot.png "Gazebo acrobat 1 joint robot")
 
 Quick Start
 ===
