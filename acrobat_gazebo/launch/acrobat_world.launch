@@ -26,7 +26,7 @@
     <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner" respawn="false" output="screen"
         args="-urdf -model acrobat -param robot_description" />
     
-    <!-- ros_control acrobat launch file -->
-    <include file="$(find acrobat_control)/launch/acrobat_control.launch" />
+    <!-- ros_control acrobat, joint position controller using ros control -->
+    <!--include file="$(find acrobat_control)/launch/acrobat_control.launch" /-->
 
 </launch>

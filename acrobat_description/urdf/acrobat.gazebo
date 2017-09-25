@@ -2,8 +2,13 @@
 <robot>
 
   <!-- ros_control plugin to actuate the acrobat joint -->
-  <gazebo>
+  <!--gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so" />
+  </gazebo-->
+
+  <!-- custom acrobat plugin to actuate joint -->
+  <gazebo>
+    <plugin name="acrobat_plugin" filename="libacrobat_plugin.so" />
   </gazebo>
 
   <!-- Link1 -->
