@@ -2,6 +2,7 @@ Gazebo ROS Acrobat balancing robot
 ===
 
 * Author: Oscar Lima <olima@isr.tecnico.ulisboa.pt>
+* Co-Author: Daniel Marta <daniellsmarta@gmail.com>
 * License: GNU General Public License, version 3 (GPL-3.0)
 
 Test your learning algorithms with this balancing 1 link 1 joint robot.
