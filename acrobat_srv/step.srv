@@ -1,0 +1,5 @@
+float64 torque
+---
+observation angles
+float64 reward
+int64 done
