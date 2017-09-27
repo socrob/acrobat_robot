@@ -1,5 +1,6 @@
 import rospy
 import acrobat_srv.step.srv as torque_to_observation_service
+import std_srvs import Empty 
 ''' 
 This class aims to wrapp the ROS-Gazebo Acrobat in an approriate handler for any RL algorithm to act upon. 
 The agent will act on a proxy of this class.
@@ -10,6 +11,7 @@ class AcrobatWrapper(object):
         self.step = 0
         rospy.init_node(self.name)
         self.torque_to_observation = rospy.ServiceProxy('torque_to_observation', torque_to_observation_service)
+        self.reset_world = rospy.ServiceProxy('/gazebo/reset_world', Empty)
         rospy.loginfo(self.name+" Wrapper Initialized")
 
     def step(self,torque):
@@ -24,9 +26,10 @@ class AcrobatWrapper(object):
 
     def reset(self):
         ''' This method should reset the gazebo environment and return an initial random angle (under initial constraints) '''
-        raise NotImplementedError
         self.step = 0
+        self.reset_world()
         rospy.loginfo("Resetting the environment")
+        #Problaly we need to create a service here to set a random angle after resetting the world
         return observation_initial
     
     def render(self):
