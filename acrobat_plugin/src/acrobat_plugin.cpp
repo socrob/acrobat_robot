@@ -28,6 +28,9 @@ void AcrobatJointPlugin::Load(gazebo::physics::ModelPtr parent, sdf::ElementPtr 
     parent_model_ = parent;
     sdf_ = sdf;
 
+    // Get the world name.
+    world_ = parent_model_->GetWorld();
+
     // Error message if the model couldn't be found
     if (!parent_model_)
     {
@@ -74,8 +77,25 @@ void AcrobatJointPlugin::Load(gazebo::physics::ModelPtr parent, sdf::ElementPtr 
     std::thread(std::bind(&AcrobatJointPlugin::QueueThread, this));
 
     // publisher setup
-    this->nh_ = new ros::NodeHandle("acrobat");
-    this->acrobat_joint_angle_publisher_ = this->nh_->advertise<std_msgs::Float32>(std::string("joint1/angle"), 1);
+    this->nh_ = new ros::NodeHandle("");
+    this->acrobat_joint_angle_publisher_ = this->nh_->advertise<sensor_msgs::JointState>(std::string("joint_states"), 1);
+
+    // set size of joint msg to 1
+    joint_state_msg_.name.resize(1);
+    joint_state_msg_.position.resize(1);
+    joint_state_msg_.velocity.resize(1);
+    joint_state_msg_.effort.resize(1);
+
+    // setting joint name from sdf
+    if (!sdf_->HasElement("jointName"))
+    {
+        ROS_FATAL_NAMED("acrobat gazebo plugin", "missing <jointName>, can't proceed");
+        return;
+    }
+    else
+    {
+        joint_state_msg_.name[0] = sdf_->GetElement("jointName")->Get<std::string>();
+    }
 }
 
 // Called by the world update start event
@@ -95,11 +115,18 @@ void AcrobatJointPlugin::Update()
     // set force to the value received by topic
     sim_joints_[0]->SetForce(0, effort_);
 
-    // publish acrobat joint angle
-    std_msgs::Float32 angle_msg;
+    // publish acrobat joint state
+
+    // fill header with current timeoutthis->wrench_msg_.header.frame_id = this->frame_name_;
+    joint_state_msg_.header.stamp.sec = (world_->GetSimTime()).sec;
+    joint_state_msg_.header.stamp.nsec = (world_->GetSimTime()).nsec;
+
     // ROS_INFO_STREAM( "angle : " << sim_joints_[0]->GetAngle(0).Radian());
-    angle_msg.data = sim_joints_[0]->GetAngle(0).Radian();;
-    this->acrobat_joint_angle_publisher_.publish(angle_msg);
+    joint_state_msg_.position[0] = sim_joints_[0]->GetAngle(0).Radian();
+    joint_state_msg_.velocity[0] = sim_joints_[0]->GetVelocity(0);
+    joint_state_msg_.effort[0] = sim_joints_[0]->GetForce((unsigned int)(0));
+
+    this->acrobat_joint_angle_publisher_.publish(joint_state_msg_);
 }
 
 // Handle an incoming message from ROS

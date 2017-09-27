@@ -5,6 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   gazebo_ros
   std_msgs
+  sensor_msgs
 )
 
 # Depend on system install of Gazebo
@@ -20,6 +21,7 @@ catkin_package(
     roscpp
     gazebo_ros
     std_msgs
+    sensor_msgs
   LIBRARIES ${PROJECT_NAME}
 )
 

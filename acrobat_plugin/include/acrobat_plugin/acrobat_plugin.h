@@ -23,6 +23,7 @@
 #include <ros/callback_queue.h>
 #include <ros/subscribe_options.h>
 #include <std_msgs/Float32.h>
+#include <sensor_msgs/JointState.h>
 
 class AcrobatJointPlugin : public gazebo::ModelPlugin
 {
@@ -44,6 +45,9 @@ class AcrobatJointPlugin : public gazebo::ModelPlugin
 
   private:
 
+    // a pointer to the world
+    gazebo::physics::WorldPtr world_;
+
     // A node use for ROS transport
     std::unique_ptr<ros::NodeHandle> rosNode;
 
@@ -61,6 +65,9 @@ class AcrobatJointPlugin : public gazebo::ModelPlugin
     ros::Publisher acrobat_joint_angle_publisher_;
 
     double effort_ = 5.0;
+
+    // to publish joint states
+    sensor_msgs::JointState joint_state_msg_;
 
   protected:
 
