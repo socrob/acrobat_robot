@@ -114,6 +114,7 @@ void AcrobatJointPlugin::Update()
 
     // set force to the value received by topic
     sim_joints_[0]->SetForce(0, effort_);
+    // sim_joints_[0]->SetVelocity(0, effort_);
 
     // publish acrobat joint state
 

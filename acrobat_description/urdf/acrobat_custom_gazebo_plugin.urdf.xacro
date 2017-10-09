@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="acrobat" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- acrobat robot -->
+  <xacro:include filename="$(find acrobat_description)/urdf/acrobat_robot.urdf.xacro" />
+
+  <!-- custom acrobat plugin to actuate joint -->
+  <gazebo>
+    <plugin name="acrobat_plugin" filename="libacrobat_plugin.so" >
+        <jointName>joint1</jointName>
+    </plugin>
+  </gazebo>
+
+  <!-- gazebo link colors and acrobat camera plugin -->
+  <xacro:include filename="$(find acrobat_description)/urdf/acrobat_gazebo.urdf.xacro" />
+
+</robot>
