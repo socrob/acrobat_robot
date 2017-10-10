@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package>
+  <name>acrobat_env_wrapper</name>
+  <version>1.0.0</version>
+  <description>
+    This pkg with a ROS wrapper around acrobat gazebo.
+    Implement here your machine learning algorithm independent of ROS or Gazebo.
+    Edit inside the common folder.
+  </description>
+
+  <license>GPLv3</license>
+
+  <author email="olima@isr.tecnico.ulisboa.pt">Oscar Lima</author>
+  <author email="daniellsmarta@gmail.com">Daniel Marta</author>
+
+  <maintainer email="olima@isr.tecnico.ulisboa.pt">Oscar Lima</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
