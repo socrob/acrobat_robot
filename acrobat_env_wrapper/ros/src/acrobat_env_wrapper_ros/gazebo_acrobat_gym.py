@@ -25,8 +25,9 @@ class GazeboAcrobatEnv(GazeboEnv):
     def __init__(self):
         # Launch the simulation with the given launchfile name
         GazeboEnv.__init__(self, "acrobat_world.launch")
-        self.torque_pub = rospy.Publisher('/acrobat/joint1/effort/command', Float32, queue_size=1)
-        self.joint_state = rospy.Subscriber('/joint_states', JointState, callback)
+        self.torque_pub = rospy.Publisher('/acrobat/joint1/effort/command', Float32, queue_size=5)
+        rospy.sleep(1)
+        self.joint_state = rospy.Subscriber('/joint_states', JointState)
         self.unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         self.pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
         self.reset_proxy = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
@@ -36,13 +37,38 @@ class GazeboAcrobatEnv(GazeboEnv):
 
         self._seed()
 
-    def callback(data):
-        rospy.loginfo("I heard {}".format(data.data))
+    @property
+    def get_angle(self):
+        data = None
+        while data is None:
+            try:
+                data = rospy.wait_for_message('/joint_states', JointState, timeout=5)
+            except:
+                pass
+        rospy.loginfo("I heard {}".format(data.position))
 
-    def listener ():
+    def publish_torque(self, torque):
+        #self.vel_pub.publish(vel_cmd)
+        rospy.sleep(1)
+        self.torque_pub.publish(data=torque)
+        data = None
+        while data is None:
+            try:
+                data = rospy.wait_for_message('/joint_states', JointState, timeout=5)
+            except:
+                pass
+        rospy.loginfo("I heard {}".format(data.effort))
+        rospy.loginfo("Number of connections {}".format(self.torque_pub.get_num_connections()))
+
+
+
+    #def callback(self,data):
+    #    rospy.loginfo("I heard {}".format(data.position))
+
+    def listener(self):
         rospy.init_node('hehe')
         self.joint_state
-        rospy.spin()
+        #rospy.spin()
 
     def discretize_observation(self,data,new_ranges):
         discretized_ranges = []
