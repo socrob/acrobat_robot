@@ -5,7 +5,7 @@ import time
 import numpy as np
 
 from gym import utils, spaces
-from gym_gazebo.envs import gazebo_env
+#from gym_gazebo.envs import gazebo_env
 from geometry_msgs.msg import Twist
 from std_srvs.srv import Empty
 
@@ -15,9 +15,9 @@ from gym.utils import seeding
 
 from gazebo_env_baseclass import GazeboEnv
 
-from std_msgs import Float32
+from std_msgs.msg import Float32
 
-from sensor_msgs import JointState 
+from sensor_msgs.msg import JointState 
 
 
 class GazeboAcrobatEnv(GazeboEnv):
