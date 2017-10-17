@@ -7,7 +7,6 @@ import random
 from std_msgs.msg import String
 from std_srvs.srv import Empty
 from sensor_msgs.msg import JointState
-
 from gazebo_msgs.srv import SetModelConfiguration
 
 class AcrobatWrapper(object):
@@ -29,11 +28,6 @@ class AcrobatWrapper(object):
         self.unpause_physics = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         # to set acrobat joint to a certain angle
         self.set_joint1_angle_service = rospy.ServiceProxy('/gazebo/set_model_configuration', SetModelConfiguration)
-        #self.joint_angle_request = SetModelConfiguration()
-        #self.joint_angle_request.model_name = 'acrobat'
-        #self.joint_angle_request.urdf_param_name = 'robot_description'
-        # -------------
-        #self.joint_angle_request.joint_names
         # subscribe to joint states topic
         rospy.Subscriber("/joint_states", JointState, self.jointStatesCallback, queue_size=1)
         # for development, to test stuff (remove when devel is stable)
@@ -106,13 +100,6 @@ class AcrobatWrapper(object):
         rospy.loginfo("Resetting the environment")
         # Probably we need to create a service here to set a random angle after resetting the world
         return observation_initial
-
-    
-    def render(self):
-        '''
-        This method should render the simulation in gazebo and call gazebo_client
-        '''
-        raise NotImplementedError
 
 
     def __close__(self):
