@@ -2,7 +2,7 @@
 <launch>
 
   <!-- the robot gazebo plugin that you want (custom plugin or ros control) -->
-  <arg name="robot_config" default="acrobat_ros_control_gazebo" /> <!-- alternative possible value: acrobat_custom_gazebo_plugin -->
+  <arg name="robot_config" default="acrobat_custom_gazebo_plugin" /> <!-- alternative possible value: acrobat_custom_gazebo_plugin -->
   
   <!-- pause gazebo physics at startup -->
   <arg name="paused" default="false" />

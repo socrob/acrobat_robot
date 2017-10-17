@@ -9,9 +9,6 @@ import subprocess
 
 from os import path
 
-from std_srvs.srv import Empty
-
-
 class GazeboEnv(gym.Env):
     """Superclass for all Gazebo environments.
     """
@@ -26,17 +23,17 @@ class GazeboEnv(gym.Env):
         # Launch the simulation with the given launchfile name
         rospy.init_node('gym', anonymous=True)
 
-        #if launchfile.startswith("/"):
-        #    fullpath = launchfile
-        #else:
-        #    fullpath = os.path.join(os.path.dirname(__file__), "assets","launch", launchfile)
-        #if not path.exists(fullpath):
-        #    raise IOError("File "+fullpath+" does not exist")
+        if launchfile.startswith("/"):
+            fullpath = launchfile
+        else:
+            fullpath = os.path.join(os.path.dirname(__file__), "assets","launch", launchfile)
+        if not path.exists(fullpath):
+            raise IOError("File "+fullpath+" does not exist")
 
-        #subprocess.Popen(["roslaunch",fullpath])
-        #print ("Gazebo launched!")
+        subprocess.Popen(["roslaunch",fullpath])
+        print ("Gazebo launched!")
 
-        #self.gzclient_pid = 0
+        self.gzclient_pid = 0
 
         #launch custom launch
 
