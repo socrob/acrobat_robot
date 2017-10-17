@@ -2,15 +2,17 @@
 
 import rospy
 import math
-# import acrobat_srv.step.srv as torque_to_observation_service
+import random
 
-from std_srvs.srv import Empty 
+from std_msgs.msg import String
+from std_srvs.srv import Empty
 from sensor_msgs.msg import JointState
+
+from gazebo_msgs.srv import SetModelConfiguration
 
 class AcrobatWrapper(object):
     '''
-    This class aims to wrapp the ROS-Gazebo Acrobat in an approriate handler for any RL algorithm to act upon. 
-    The agent will act on a proxy of this class.
+    This class wrapps the ROS-Gazebo Acrobat robot in an approriate handler for any RL algorithm to act upon.
     '''
     def __init__(self, name='Acrobat'):
         # member variables
@@ -25,12 +27,41 @@ class AcrobatWrapper(object):
         self.reset_world = rospy.ServiceProxy('/gazebo/reset_world', Empty)
         self.pause_physics = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
         self.unpause_physics = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
+        # to set acrobat joint to a certain angle
+        self.set_joint1_angle_service = rospy.ServiceProxy('/gazebo/set_model_configuration', SetModelConfiguration)
+        #self.joint_angle_request = SetModelConfiguration()
+        #self.joint_angle_request.model_name = 'acrobat'
+        #self.joint_angle_request.urdf_param_name = 'robot_description'
+        # -------------
+        #self.joint_angle_request.joint_names
         # subscribe to joint states topic
         rospy.Subscriber("/joint_states", JointState, self.jointStatesCallback, queue_size=1)
+        # for development, to test stuff (remove when devel is stable)
+        rospy.Subscriber("~test", String, self.testCallback, queue_size=1)
         # fetch from param server the loop rate, to control the frequency at which this node will run
         self.loop_rate = rospy.Rate(rospy.get_param('~loop_rate', 10.0))
         # inform the user that initialization is done
         rospy.loginfo(self.name + " wrapper node initialized...")
+
+
+    def testCallback(self, msg):
+        '''
+        This function is here for testing purposes
+        '''
+        if msg.data == 'pause':
+            self.pause_physics()
+        elif msg.data == 'unpause':
+            self.unpause_physics()
+        elif msg.data == 'set_random_angle':
+            self.setJointAngle(random.uniform(-3.1415, 3.1415))
+
+
+    def setJointAngle(self, angle):
+        '''
+        Uses /gazebo/set_model_configuration to set a position in the acrobat without using any controllers
+        '''
+        # call service /gazebo/set_model_configuration
+        return self.set_joint1_angle_service('acrobat', 'robot_description', ['joint1'], [angle])
 
 
     def jointStatesCallback(self, msg):
@@ -45,11 +76,12 @@ class AcrobatWrapper(object):
         # raise flag indicating that a joint msg has been received
         self.joint_state_received = True
 
+
     def step(self, torque):
         '''
         Takes the torque on the joint as input and outputs an RL tuple (observation_after, reward, done_flag)
         '''
-        self.unpause_physics() 
+        self.unpause_physics()
         try:
             response = self.torque_to_observation(torque)
         except rospy.ServiceException as exc:
