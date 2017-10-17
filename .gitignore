@@ -1,2 +1,5 @@
 # Emacs Files
 .#*
+
+# python autom generated precompiled files
+*.pyc
