@@ -25,16 +25,23 @@ class GazeboAcrobatEnv(GazeboEnv):
     def __init__(self):
         # Launch the simulation with the given launchfile name
         GazeboEnv.__init__(self, "acrobat_world.launch")
+
+        # Topic to publish torque
         self.torque_pub = rospy.Publisher('/acrobat/joint1/effort/command', Float32, queue_size=5)
+
+        #Topic to read the state of the joint
         self.joint_state = rospy.Subscriber('/joint_states', JointState)
 
+        # Gazebo Service that resets simulation
         rospy.wait_for_service('/gazebo/reset_simulation')
         self.reset_proxy = rospy.ServiceProxy('/gazebo/reset_simulation', Empty)
 
+        # Gazebo service to pause
         rospy.wait_for_service('/gazebo/pause_physics')
         p = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
         self.pausa = p
 
+        # Gazebo service to unpause
         rospy.wait_for_service('/gazebo/unpause_physics')
         up = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         self.fora_pausa = up
@@ -76,15 +83,6 @@ class GazeboAcrobatEnv(GazeboEnv):
         rospy.loginfo("Number of connections {}".format(self.torque_pub.get_num_connections()))
 
 
-
-    #def callback(self,data):
-    #    rospy.loginfo("I heard {}".format(data.position))
-
-    def listener(self):
-        rospy.init_node('hehe')
-        self.joint_state
-        #rospy.spin()
-
     def discretize_observation(self,data,new_ranges):
         discretized_ranges = []
         min_range = 0.2
@@ -102,10 +100,12 @@ class GazeboAcrobatEnv(GazeboEnv):
                 done = True
         return discretized_ranges,done
 
+    # Defines a seed
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
+    # Makes a step
     def step(self, action):
 
         self.unpause
@@ -127,13 +127,14 @@ class GazeboAcrobatEnv(GazeboEnv):
 
         return state
 
+
+    # Resets
     @property
     def reset(self):
 
         # Resets the state of the environment and returns an initial observation.
         rospy.wait_for_service('/gazebo/reset_simulation')
         try:
-            #reset_proxy.call()
             self.reset_proxy()
         except (rospy.ServiceException) as e:
             print ("/gazebo/reset_simulation service call failed")
@@ -141,14 +142,18 @@ class GazeboAcrobatEnv(GazeboEnv):
         # Unpause simulation to make observation
         self.unpause
         
+        # Reset Topic
         self.torque_pub.publish(data=0)
-        #read joint states
+        
+        # Read joint states
         state = self.get_state
 
+        #Pause for next step
         self.pause
 
         return state
 
+    # Pauses
     @property
     def pause(self):
         rospy.wait_for_service('/gazebo/pause_physics')
@@ -157,6 +162,7 @@ class GazeboAcrobatEnv(GazeboEnv):
         except (rospy.ServiceException) as e:
             print ("/gazebo/pause_physics service call failed")
 
+    # Unpauses
     @property
     def unpause(self):
         rospy.wait_for_service('/gazebo/unpause_physics')
