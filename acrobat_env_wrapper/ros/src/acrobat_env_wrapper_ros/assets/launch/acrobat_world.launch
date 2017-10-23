@@ -31,7 +31,7 @@
          command="$(find xacro)/xacro --inorder '$(find acrobat_description)/urdf/$(arg robot_config).urdf.xacro'" />
 
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-  <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner" respawn="false" output="screen"
+  <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner" respawn="false" output="log"
         args="-urdf -model acrobat -param robot_description" />
 
   <!-- convert joint states to TF transforms for rviz, etc -->

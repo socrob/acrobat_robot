@@ -19,6 +19,9 @@ from std_msgs.msg import Float32
 
 from sensor_msgs.msg import JointState 
 
+from gazebo_msgs.srv import SetModelConfiguration
+
+
 
 class GazeboAcrobatEnv(GazeboEnv):
 
@@ -46,10 +49,21 @@ class GazeboAcrobatEnv(GazeboEnv):
         up = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         self.fora_pausa = up
 
+        rospy.wait_for_service('/gazebo/set_model_configuration')
+        angus = rospy.ServiceProxy('/gazebo/set_model_configuration', SetModelConfiguration)
+        self.set_joint1_angle_service = angus
+
         self.action_space = spaces.Discrete(3) #F,L,R
         self.reward_range = (-np.inf, np.inf)
 
         self._seed()
+
+    def setJointAngle(self, angle):
+        '''
+        Uses /gazebo/set_model_configuration to set a position in the acrobat without using any controllers
+        '''
+        # call service /gazebo/set_model_configuration
+        return self.set_joint1_angle_service('acrobat', 'robot_description', ['joint1'], [angle]) 
 
     @property
     def get_angle(self):
@@ -82,23 +96,6 @@ class GazeboAcrobatEnv(GazeboEnv):
         rospy.loginfo("I heard {}".format(data.effort))
         rospy.loginfo("Number of connections {}".format(self.torque_pub.get_num_connections()))
 
-
-    def discretize_observation(self,data,new_ranges):
-        discretized_ranges = []
-        min_range = 0.2
-        done = False
-        mod = len(data.ranges)/new_ranges
-        for i, item in enumerate(data.ranges):
-            if (i%mod==0):
-                if data.ranges[i] == float ('Inf') or np.isinf(data.ranges[i]):
-                    discretized_ranges.append(6)
-                elif np.isnan(data.ranges[i]):
-                    discretized_ranges.append(0)
-                else:
-                    discretized_ranges.append(int(data.ranges[i]))
-            if (min_range > data.ranges[i] > 0):
-                done = True
-        return discretized_ranges,done
 
     # Defines a seed
     def seed(self, seed=None):
@@ -144,6 +141,7 @@ class GazeboAcrobatEnv(GazeboEnv):
         
         # Reset Topic
         self.torque_pub.publish(data=0)
+        self.setJointAngle(random.uniform(-3.1415, 3.1415))
         
         # Read joint states
         state = self.get_state
