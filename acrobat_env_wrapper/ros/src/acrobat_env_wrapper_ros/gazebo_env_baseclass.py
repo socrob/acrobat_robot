@@ -14,14 +14,14 @@ class GazeboEnv(gym.Env):
     """
     metadata = {'render.modes': ['human']}
     
-    def __init__(self, launchfile):
+    def __init__(self, launchfile,log):
 
         #start roscore
         subprocess.Popen("roscore")
         print ("Roscore launched!")
 
         # Launch the simulation with the given launchfile name
-        rospy.init_node('gym', anonymous=True)
+        rospy.init_node('gym', anonymous=True, log_level=rospy.FATAL)
 
         if launchfile.startswith("/"):
             fullpath = launchfile
