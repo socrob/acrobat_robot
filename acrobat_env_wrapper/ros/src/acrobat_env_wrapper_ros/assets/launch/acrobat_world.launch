@@ -39,10 +39,10 @@
         name="robot_state_publisher" output="screen" />
 
   <!-- tf echo between goal_link and link3, then publish euclidean distance -->
-  <node pkg="acrobat_reward_calculation" type="tf_euclidean_distance"
+  <!--node pkg="acrobat_reward_calculation" type="tf_euclidean_distance"
         name="tf_euclidean_distance_node" output="screen" >
     <param name="target_frame_id" value="goal_link" />
     <param name="reference_frame_id" value="link3" />
-  </node>
+  </node-->
 
 </launch>
