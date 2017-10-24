@@ -109,10 +109,7 @@ class GazeboAcrobatEnv(GazeboEnv):
         self.publish_torque(action)
         state = self.get_state
         self.pause
-
-        #state,done = self.discretize_observation(data,5)
-        #state = self.get_state
-        reward = 100
+        reward = self.reward(state,action)
         done = True
         #if not done:
         #    if action == 0:
@@ -122,8 +119,13 @@ class GazeboAcrobatEnv(GazeboEnv):
         #else:
         #    reward = -200
 
-        return state
+        return state, reward, done
 
+
+    def reward(self,state,action):
+        angle = np.arcsin(state[0])
+        print("Current angle is {}".format(angle))
+        return -1 * (angle[0]**2 + 0.1*state[2][0]**2 + 0.001*action**2)
 
     # Resets
     @property
