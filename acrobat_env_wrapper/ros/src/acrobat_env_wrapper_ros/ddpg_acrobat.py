@@ -1,5 +1,3 @@
-# From https://github.com/heerad/gymtime/blob/master/ddpg.py
-
 import numpy as np
 import tensorflow as tf
 import json, sys, os
