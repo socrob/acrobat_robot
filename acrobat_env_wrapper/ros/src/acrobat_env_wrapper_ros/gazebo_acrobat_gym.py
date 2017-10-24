@@ -5,6 +5,7 @@ import time
 import numpy as np
 
 from gym import utils, spaces
+from gym.spaces.box import Box
 #from gym_gazebo.envs import gazebo_env
 from geometry_msgs.msg import Twist
 from std_srvs.srv import Empty
@@ -20,6 +21,8 @@ from std_msgs.msg import Float32
 from sensor_msgs.msg import JointState 
 
 from gazebo_msgs.srv import SetModelConfiguration
+
+import random
 
 
 
@@ -53,7 +56,7 @@ class GazeboAcrobatEnv(GazeboEnv):
         angus = rospy.ServiceProxy('/gazebo/set_model_configuration', SetModelConfiguration)
         self.set_joint1_angle_service = angus
 
-        self.action_space = spaces.Discrete(3) #F,L,R
+        self.action_space = Box(low=-10, high=10, shape=(1,))
         self.reward_range = (-np.inf, np.inf)
 
         self._seed()
@@ -81,7 +84,11 @@ class GazeboAcrobatEnv(GazeboEnv):
         data = self.get_angle
         angle = data.position
         velocity = data.velocity
-        return np.cos(angle),np.sin(angle),velocity
+        l = []
+        l.append(np.cos(angle[0]))
+        l.append(np.sin(angle[0]))
+        l.append(velocity[0])
+        return np.asarray(l)
 
 
     def publish_torque(self, torque):
@@ -106,26 +113,19 @@ class GazeboAcrobatEnv(GazeboEnv):
     def step(self, action):
 
         self.unpause
-        self.publish_torque(action)
+        self.publish_torque(action[0])
         state = self.get_state
         self.pause
         reward = self.reward(state,action)
-        done = True
-        #if not done:
-        #    if action == 0:
-        #        reward = 5
-        #    else:
-        ##        reward = 1
-        #else:
-        #    reward = -200
+        done = False
 
         return state, reward, done
 
 
     def reward(self,state,action):
         angle = np.arcsin(state[0])
-        print("Current angle is {}".format(angle))
-        return -1 * (angle[0]**2 + 0.1*state[2][0]**2 + 0.001*action**2)
+        #print("Current angle is {}".format(angle))
+        return -1 * (angle**2 + 0.1*state[2]**2 + 0.001*action[0]**2)
 
     # Resets
     @property
@@ -170,5 +170,7 @@ class GazeboAcrobatEnv(GazeboEnv):
             self.fora_pausa()
         except (rospy.ServiceException) as e:
             print ("/gazebo/unpause_physics service call failed")
+
+    
 
 
