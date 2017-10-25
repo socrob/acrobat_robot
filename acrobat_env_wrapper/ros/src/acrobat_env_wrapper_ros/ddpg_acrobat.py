@@ -6,6 +6,9 @@ import random
 from collections import deque
 from gazebo_acrobat_gym import GazeboAcrobatEnv as gg
 import time
+#from plotter import interprocess_plotter as plotter
+#from simple_plot import plotter as plotter
+
 
 #####################################################################################################
 ## Algorithm
@@ -40,7 +43,7 @@ l2_reg_actor = 1e-6			# L2 regularization factor for the actor
 l2_reg_critic = 1e-6		# L2 regularization factor for the critic
 dropout_actor = 0			# dropout rate for actor (0 = no dropout)
 dropout_critic = 0			# dropout rate for critic (0 = no dropout)
-num_episodes = 200		# number of episodes
+num_episodes = 400		# number of episodes
 max_steps_ep = 200	# default max number of steps per episode (unless env has a lower hardcoded limit)
 tau = 1e-2				# soft target update rate
 train_every = 1			# number of steps to run the policy (and collect experience) before updating network weights
@@ -58,7 +61,7 @@ env = gg()
 state_dim = 3 	# Get total number of dimensions in state
 action_dim = 1		# Assuming continuous action space
 
-
+#p = plotter(num_lines=3)
 # set seeds to 0
 #env.seed(0)
 #np.random.seed(0)
@@ -294,7 +297,8 @@ for ep in range(num_episodes):
 			# Increment episode counter
 			_ = sess.run(episode_inc_op)
 			break
-		
+	print('I heard {} radians from the top of our joint'.format(env.get_angle_server))
+	#p.pushys([total_reward,noise_scale,(time.time()%3600)/3600-2])
 	print('Episode %2i, Reward: %7.3f, Steps: %i, Final noise scale: %7.3f'%(ep,total_reward,steps_in_ep, noise_scale))
 
 # Finalize and upload results

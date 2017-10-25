@@ -76,7 +76,7 @@ class GazeboAcrobatEnv(GazeboEnv):
                 data = rospy.wait_for_message('/joint_states', JointState, timeout=5)
             except:
                 pass
-        rospy.loginfo("I heard {}".format(data.position))
+        #rospy.loginfo("I heard {} radians on our joint from the top".format(data.position))
         return data
 
     @property
@@ -89,6 +89,21 @@ class GazeboAcrobatEnv(GazeboEnv):
         l.append(np.sin(angle[0]))
         l.append(velocity[0])
         return np.asarray(l)
+
+    @property
+    def get_state_server(self):
+        self.unpause
+        r = self.get_state
+        self.pause
+        return r
+
+    @property
+    def get_angle_server(self):
+        self.unpause
+        state = self.get_state
+        angle = np.arcsin(state[0])
+        self.pause
+        return angle
 
 
     def publish_torque(self, torque):
@@ -125,7 +140,7 @@ class GazeboAcrobatEnv(GazeboEnv):
     def reward(self,state,action):
         angle = np.arcsin(state[0])
         #print("Current angle is {}".format(angle))
-        return -1 * (angle**2 + 0.1*state[2]**2 + 0.001*action[0]**2)
+        return -1 * (10*angle**2 + 0.1*state[2]**2 + 0.001*action[0]**2)
 
     # Resets
     @property
