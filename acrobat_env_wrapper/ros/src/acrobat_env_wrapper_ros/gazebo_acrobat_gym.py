@@ -101,7 +101,7 @@ class GazeboAcrobatEnv(GazeboEnv):
     def get_angle_server(self):
         self.unpause
         state = self.get_state
-        angle = np.arcsin(state[0])
+        angle = np.arccos(state[0])
         self.pause
         return angle
 
@@ -138,9 +138,9 @@ class GazeboAcrobatEnv(GazeboEnv):
 
 
     def reward(self,state,action):
-        angle = np.arcsin(state[0])
+        angle = np.arccos(state[0])
         #print("Current angle is {}".format(angle))
-        return -1 * (10*angle**2 + 0.1*state[2]**2 + 0.001*action[0]**2)
+        return -1 * (angle**2 + 0.1*state[2]**2 + 0.001*action[0]**2)
 
     # Resets
     @property
@@ -169,7 +169,6 @@ class GazeboAcrobatEnv(GazeboEnv):
         return state
 
 
-    @property
     def set_joint_server(self,angle):
         self.unpause
         self.setJointAngle(angle)
