@@ -168,6 +168,13 @@ class GazeboAcrobatEnv(GazeboEnv):
 
         return state
 
+
+    @property
+    def set_joint_server(self,angle):
+        self.unpause
+        self.setJointAngle(angle)
+        self.pause
+
     # Pauses
     @property
     def pause(self):
