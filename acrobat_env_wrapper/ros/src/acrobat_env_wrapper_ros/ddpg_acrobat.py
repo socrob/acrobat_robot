@@ -43,7 +43,7 @@ l2_reg_actor = 1e-6			# L2 regularization factor for the actor
 l2_reg_critic = 1e-6		# L2 regularization factor for the critic
 dropout_actor = 0			# dropout rate for actor (0 = no dropout)
 dropout_critic = 0			# dropout rate for critic (0 = no dropout)
-num_episodes = 400		# number of episodes
+num_episodes = 4		# number of episodes
 max_steps_ep = 200	# default max number of steps per episode (unless env has a lower hardcoded limit)
 tau = 1e-2				# soft target update rate
 train_every = 1			# number of steps to run the policy (and collect experience) before updating network weights
@@ -67,10 +67,10 @@ action_dim = 1		# Assuming continuous action space
 #np.random.seed(0)
 
 # prepare monitorings
-#outdir = '/tmp/ddpg-agent-results'
+outdir = '/tmp/ddpg-agent-results'
 #env = wrappers.Monitor(env, outdir, force=True)
-#def writefile(fname, s):
-#    with open(path.join(outdir, fname), 'w') as fh: fh.write(s)
+def writefile(fname, s):
+    with open(path.join(outdir, fname), 'w') as fh: fh.write(s)
 info = {}
 #info['env_id'] = env.spec.id
 info['params'] = dict(
@@ -297,11 +297,13 @@ for ep in range(num_episodes):
 			# Increment episode counter
 			_ = sess.run(episode_inc_op)
 			break
-	print('I heard {} radians from the top of our joint'.format(env.get_angle_server))
+	angle = env.get_angle_server
+	print('I heard {} radians from the top of our joint'.format(angle))
 	#p.pushys([total_reward,noise_scale,(time.time()%3600)/3600-2])
 	print('Episode %2i, Reward: %7.3f, Steps: %i, Final noise scale: %7.3f'%(ep,total_reward,steps_in_ep, noise_scale))
-
+	record = {'angle': angle, 'episode': ep, 'total': total_reward, 'noise': noise_scale[0]}
+	writefile('record.info',json.dumps(record))
 # Finalize and upload results
-#writefile('info.json', json.dumps(info))
+writefile('info.json', json.dumps(info))
 env.close()
 #gym.upload(outdir)

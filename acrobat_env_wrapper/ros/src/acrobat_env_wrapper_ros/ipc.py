@@ -50,7 +50,4 @@ class ipc(pretty): # base for all interprocess communicating classes
     def recv(self):
         return self.pc.recv()
 
-    def __del__(self):
-        self.pc.kill_slave()
-        self.pretty('waiting for join()')
-        self.p.join()
+
