@@ -2,6 +2,7 @@
 
 import time, os
 from ipc import ipc
+import json
 
 def remote_plotter_callback(conn):
     import matplotlib
@@ -148,10 +149,21 @@ class interprocess_plotter(ipc):
         self.send(('pushys', ys))
 
 if __name__=='__main__':
-    ip = interprocess_plotter(2)
+    ip = interprocess_plotter(3)
     import math,time
-    for i in range(100):
-        ip.pushys([math.sin(i/10), math.sin(i/10+2)])
-        time.sleep(0.05)
+    
+    with open('/tmp/record.info') as data_file:
+        for line in data_file:    
+            data = json.loads(line)
+            for i in range(len(data)):
+                angle = data[i]['angle']
+                #ep = data[i]['episode']
+                total = data[i]['total']
+                noise = data[i]['noise']
+                ip.pushys([angle,total,noise])
 
-    time.sleep(5)
+    #for i in range(100):
+    #    ip.pushys([math.sin(i/10), math.sin(i/10+2)])
+    #    time.sleep(0.05)
+
+    time.sleep(30)

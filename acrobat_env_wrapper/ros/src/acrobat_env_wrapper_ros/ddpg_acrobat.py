@@ -67,7 +67,7 @@ action_dim = 1		# Assuming continuous action space
 #np.random.seed(0)
 
 # prepare monitorings
-outdir = '/tmp/ddpg-agent-results'
+outdir = '/tmp'
 #env = wrappers.Monitor(env, outdir, force=True)
 def writefile(fname, s):
     with open(path.join(outdir, fname), 'w') as fh: fh.write(s)
@@ -231,6 +231,7 @@ def clamper(actions):
 
 
 total_steps = 0
+record = []
 for ep in range(num_episodes):
 
 	total_reward = 0
@@ -301,8 +302,9 @@ for ep in range(num_episodes):
 	print('I heard {} radians from the top of our joint'.format(angle))
 	#p.pushys([total_reward,noise_scale,(time.time()%3600)/3600-2])
 	print('Episode %2i, Reward: %7.3f, Steps: %i, Final noise scale: %7.3f'%(ep,total_reward,steps_in_ep, noise_scale))
-	record = {'angle': angle, 'episode': ep, 'total': total_reward, 'noise': noise_scale[0]}
-	writefile('record.info',json.dumps(record))
+	record.append({'angle': angle, 'episode': ep, 'total': total_reward, 'noise': noise_scale[0]})
+
+writefile('record.info',json.dumps(record))
 # Finalize and upload results
 writefile('info.json', json.dumps(info))
 env.close()
