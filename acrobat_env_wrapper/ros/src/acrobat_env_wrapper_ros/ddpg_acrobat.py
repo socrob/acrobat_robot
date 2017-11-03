@@ -43,7 +43,7 @@ l2_reg_actor = 1e-6			# L2 regularization factor for the actor
 l2_reg_critic = 1e-6		# L2 regularization factor for the critic
 dropout_actor = 0			# dropout rate for actor (0 = no dropout)
 dropout_critic = 0			# dropout rate for critic (0 = no dropout)
-num_episodes = 4		# number of episodes
+num_episodes = 400		# number of episodes
 max_steps_ep = 200	# default max number of steps per episode (unless env has a lower hardcoded limit)
 tau = 1e-2				# soft target update rate
 train_every = 1			# number of steps to run the policy (and collect experience) before updating network weights
