@@ -20,9 +20,5 @@
   <gazebo reference="link2">
     <material>Gazebo/Green</material>
   </gazebo>
-
-  <gazebo reference="link3">
-    <material>Gazebo/Orange</material>
-  </gazebo>
   
 </robot>

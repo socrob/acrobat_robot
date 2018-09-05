@@ -58,17 +58,16 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        dummy_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         link1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
         link2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        link3:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -88,11 +87,11 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        dummy_link:
+          Value: false
         link1:
           Value: false
         link2:
-          Value: false
-        link3:
           Value: false
         world:
           Value: true
@@ -103,9 +102,9 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
-          link1:
-            link2:
-              link3:
+          dummy_link:
+            link1:
+              link2:
                 {}
       Update Interval: 0
       Value: true
@@ -143,11 +142,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Scale: 86.1276245
+      Scale: 312.077301
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 0.580533683
-      Y: 0.12771745
+      X: 0.724518418
+      Y: -0.044585757
     Saved: ~
 Window Geometry:
   Displays:
