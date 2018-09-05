@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <robot name="acrobat" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <!-- Math properties -->
+  <xacro:property name="PI" value="3.141592653589793" />
+
   <!-- Robot properties -->
   <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
   <xacro:property name="link_width" value="0.1" /> <!-- link square dimensions (link_widthxlink_width) -->
@@ -9,136 +12,67 @@
   <!-- link1 properties -->
   <xacro:property name="link1_name" value="link1" />
   <xacro:property name="link1_height" value="2" />
+  <xacro:property name="link1_color" value="grey" />
   
   <!-- link2 properties -->
   <xacro:property name="link2_name" value="link2" />
   <xacro:property name="link2_height" value="1" />
+  <xacro:property name="link2_color" value="green" />
   
   <!-- link3 properties -->
   <xacro:property name="link3_name" value="link3" />
   <xacro:property name="link3_height" value="0.5" />
+  <xacro:property name="link3_color" value="orange" />
 
   <!-- joint properties -->
-  <xacro:property name="joint_lower_limit" value="-3.1415" />
-  <xacro:property name="joint_upper_limit" value="3.1415" />
+  <xacro:property name="joint_lower_limit" value="${-PI/2.0}" />
+  <xacro:property name="joint_upper_limit" value="${PI/2.0}" />
   <xacro:property name="joint_effort" value="1000.0" />
   <xacro:property name="joint_velocity" value="0.5" />
   
   <!-- Import Rviz colors -->
   <xacro:include filename="$(find acrobat_description)/urdf/materials.urdf.xacro" />
 
-  <!-- Used for fixing robot to Gazebo 'base_link' -->
-  <link name="world"/>
+  <!-- link macro -->
+  <xacro:macro name="link_macro" params="link_name link_height link_color">
+    <link name="${link_name}">
+        <collision>
+        <origin xyz="0 0 ${link_height/2}" rpy="0 0 0"/>
+        <geometry>
+            <box size="${link_width} ${link_width} ${link_height}"/>
+        </geometry>
+        </collision>
 
-  <!-- link1 -->
-  <link name="${link1_name}">
-    <collision>
-      <origin xyz="0 0 ${link1_height/2}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${link_width} ${link_width} ${link1_height}"/>
-      </geometry>
-    </collision>
+        <visual>
+        <origin xyz="0 0 ${link_height/2}" rpy="0 0 0"/>
+        <geometry>
+            <box size="${link_width} ${link_width} ${link_height}"/>
+        </geometry>
+        <material name="${link_color}"/>
+        </visual>
 
-    <visual>
-      <origin xyz="0 0 ${link1_height/2}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${link_width} ${link_width} ${link1_height}"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
+        <inertial>
+        <origin xyz="0 0 ${link_height/2}" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia
+            ixx="${mass / 12.0 * (link_width*link_width + link_height*link_height)}" ixy="0.0" ixz="0.0"
+            iyy="${mass / 12.0 * (link_height*link_height + link_width*link_width)}" iyz="0.0"
+            izz="${mass / 12.0 * (link_width*link_width + link_width*link_width)}"/>
+        </inertial>
+    </link>
+  </xacro:macro>
 
-    <inertial>
-      <origin xyz="0 0 ${link1_height/2}" rpy="0 0 0"/>
-      <mass value="${mass}"/>
-      <inertia
-          ixx="${mass / 12.0 * (link_width*link_width + link1_height*link1_height)}" ixy="0.0" ixz="0.0"
-          iyy="${mass / 12.0 * (link1_height*link1_height + link_width*link_width)}" iyz="0.0"
-          izz="${mass / 12.0 * (link_width*link_width + link_width*link_width)}"/>
-    </inertial>
-  </link>
+  <!-- joint macro -->
+  <xacro:macro name="joint_macro" params="joint_name parent_link child_link parent_link_height">
+    <joint name="${parent_link}_to_${child_link}_joint" type="revolute">
+        <parent link="${parent_link}"/>
+        <child link="${child_link}"/>
+        <origin xyz="0 ${link_width} ${parent_link_height - axel_offset}" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <dynamics damping="0.7"/>
+        <limit effort="${joint_effort}" lower="${joint_lower_limit}" upper="${joint_upper_limit}" velocity="${joint_velocity}"/>
+    </joint>
 
-  <!-- joint0 -->
-  <joint name="fixed" type="fixed">
-    <parent link="world"/>
-    <child link="${link1_name}"/>
-  </joint>
-
-  <!-- link2 -->
-  <link name="${link2_name}">
-    <collision>
-      <origin xyz="0 0 ${link2_height/2 - axel_offset}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${link_width} ${link_width} ${link2_height}"/>
-      </geometry>
-    </collision>
-
-    <visual>
-      <origin xyz="0 0 ${link2_height/2 - axel_offset}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${link_width} ${link_width} ${link2_height}"/>
-      </geometry>
-      <material name="green"/>
-    </visual>
-
-    <inertial>
-      <origin xyz="0 0 ${link2_height/2 - axel_offset}" rpy="0 0 0"/>
-      <mass value="${mass}"/>
-      <inertia
-          ixx="${mass / 12.0 * (link_width*link_width + link2_height*link2_height)}" ixy="0.0" ixz="0.0"
-          iyy="${mass / 12.0 * (link2_height*link2_height + link_width*link_width)}" iyz="0.0"
-          izz="${mass / 12.0 * (link_width*link_width + link_width*link_width)}"/>
-    </inertial>
-  </link>
-
-  <!-- joint1 -->
-  <joint name="${link1_name}_to_${link2_name}_joint" type="revolute">
-    <parent link="${link1_name}"/>
-    <child link="${link2_name}"/>
-    <origin xyz="0 ${link_width} ${link1_height - axel_offset}" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <dynamics damping="0.7"/>
-    <limit effort="1000.0" lower="${joint_lower_limit}" upper="${joint_upper_limit}" velocity="0.5"/>
-  </joint>
-
-  <!-- link3 -->
-  <link name="${link3_name}">
-    <collision>
-      <origin xyz="0 0 ${link3_height/2 - axel_offset}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${link_width} ${link_width} ${link3_height}"/>
-      </geometry>
-    </collision>
-
-    <visual>
-      <origin xyz="0 0 ${link3_height/2 - axel_offset}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${link_width} ${link_width} ${link3_height}"/>
-      </geometry>
-      <material name="green"/>
-    </visual>
-
-    <inertial>
-      <origin xyz="0 0 ${link3_height/2 - axel_offset}" rpy="0 0 0"/>
-      <mass value="${mass}"/>
-      <inertia
-          ixx="${mass / 12.0 * (link_width*link_width + link3_height*link3_height)}" ixy="0.0" ixz="0.0"
-          iyy="${mass / 12.0 * (link3_height*link3_height + link_width*link_width)}" iyz="0.0"
-          izz="${mass / 12.0 * (link_width*link_width + link_width*link_width)}"/>
-    </inertial>
-  </link>
-
-  <!-- joint2 -->
-  <joint name="${link2_name}_to_${link3_name}_joint" type="revolute">
-    <parent link="${link2_name}"/>
-    <child link="${link3_name}"/>
-    <origin xyz="0 ${link_width} ${link2_height - axel_offset}" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <dynamics damping="0.7"/>
-    <limit effort="${joint_effort}" lower="${joint_lower_limit}" upper="${joint_upper_limit}" velocity="${joint_velocity}"/>
-  </joint>
-  
-  <!-- arm transmission macro (needed to actuate joints in gazebo simulator via ROS control) -->
-  <xacro:macro name="arm_transmission_macro" params="joint_name">
     <transmission name="${joint_name}_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${joint_name}">
@@ -150,11 +84,24 @@
     </transmission>
   </xacro:macro>
 
-  <!-- joint1 -->
-  <xacro:arm_transmission_macro joint_name="${link1_name}_to_${link2_name}_joint" />
+  <!-- link0 -->
+  <link name="world"/>
+  
+  <!-- links 1, 2, 3 -->
+  <xacro:link_macro link_name="${link1_name}" link_height="${link1_height}" link_color="${link1_color}" />
+  <xacro:link_macro link_name="${link2_name}" link_height="${link2_height}" link_color="${link2_color}" />
+  <xacro:link_macro link_name="${link3_name}" link_height="${link3_height}" link_color="${link3_color}" />
 
-  <!-- joint2 -->
-  <xacro:arm_transmission_macro joint_name="${link2_name}_to_${link3_name}_joint" />
+  <!-- joint0 -->
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="${link1_name}"/>
+    <origin xyz="0 0 0" rpy="${-PI/2.0} 0 0"/>
+  </joint>
+
+  <!-- joints 1, 2 -->
+  <xacro:joint_macro joint_name="joint1" parent_link="${link1_name}" child_link="${link2_name}" parent_link_height="${link1_height}" />
+  <xacro:joint_macro joint_name="joint2" parent_link="${link2_name}" child_link="${link3_name}" parent_link_height="${link2_height}" />
 
   <!-- gazebo related tags -->
   <xacro:include filename="$(find acrobat_description)/urdf/acrobat_gazebo.urdf.xacro" />
