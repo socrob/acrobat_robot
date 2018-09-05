@@ -1,6 +1,0 @@
-#!/usr/bin/env python
-
-import acrobat_reward_calculation_ros.acrobat_reward_calculation
-
-if __name__ == '__main__':
- acrobat_reward_calculation_ros.acrobat_reward_calculation.main()

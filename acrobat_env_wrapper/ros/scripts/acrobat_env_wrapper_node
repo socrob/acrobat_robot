@@ -1,6 +1,0 @@
-#!/usr/bin/env python
-
-import acrobat_env_wrapper_ros.acrobat_env_wrapper
-
-if __name__ == '__main__':
-    acrobat_env_wrapper_ros.acrobat_env_wrapper.main()
