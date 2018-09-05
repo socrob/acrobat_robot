@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- NOTE: this is an example launch file, please do not modify! -->
+    
+    <!-- allows you to test urdf model -->
+
+    <!-- upload robot URDF model to parameter server -->
+    <param name="robot_description"
+           command="$(find xacro)/xacro --inorder '$(find acrobat_description)/urdf/acrobat_robot.urdf.xacro'" />
+
+    <!-- send fake joint values from gui -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+        <param name="use_gui" value="true" />
+    </node>
+
+    <!-- generate tf data from urdf model and joint states -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+    <!-- visualize robot in Rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find acrobat_description)/config/acrobat.rviz" />
+
+</launch>

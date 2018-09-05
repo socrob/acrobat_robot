@@ -1,163 +1,162 @@
 <?xml version="1.0"?>
-<!-- Revolute 1 joint manipulator -->
 <robot name="acrobat" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- Constants for robot dimensions -->
-  <xacro:property name="PI" value="3.1415926535897931"/>
+  <!-- Robot properties -->
   <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
-  <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
-  <xacro:property name="height1" value="2" /> <!-- Link 1 -->
-  <xacro:property name="height2" value="1" /> <!-- Link 2 -->
-  <xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
+  <xacro:property name="link_width" value="0.1" /> <!-- link square dimensions (link_widthxlink_width) -->
   <xacro:property name="axel_offset" value="0.05" /> <!-- Space btw top of beam and the each joint -->
 
+  <!-- link1 properties -->
+  <xacro:property name="link1_name" value="link1" />
+  <xacro:property name="link1_height" value="2" />
+  
+  <!-- link2 properties -->
+  <xacro:property name="link2_name" value="link2" />
+  <xacro:property name="link2_height" value="1" />
+  
+  <!-- link3 properties -->
+  <xacro:property name="link3_name" value="link3" />
+  <xacro:property name="link3_height" value="0.5" />
+
+  <!-- joint properties -->
+  <xacro:property name="joint_lower_limit" value="-3.1415" />
+  <xacro:property name="joint_upper_limit" value="3.1415" />
+  <xacro:property name="joint_effort" value="1000.0" />
+  <xacro:property name="joint_velocity" value="0.5" />
+  
   <!-- Import Rviz colors -->
   <xacro:include filename="$(find acrobat_description)/urdf/materials.urdf.xacro" />
 
   <!-- Used for fixing robot to Gazebo 'base_link' -->
   <link name="world"/>
 
-  <joint name="fixed" type="fixed">
-    <parent link="world"/>
-    <child link="link1"/>
-  </joint>
-
-  <!-- Base Link -->
-  <link name="link1">
+  <!-- link1 -->
+  <link name="${link1_name}">
     <collision>
-      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${link1_height/2}" rpy="0 0 0"/>
       <geometry>
-        <box size="${width} ${width} ${height1}"/>
+        <box size="${link_width} ${link_width} ${link1_height}"/>
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${link1_height/2}" rpy="0 0 0"/>
       <geometry>
-        <box size="${width} ${width} ${height1}"/>
+        <box size="${link_width} ${link_width} ${link1_height}"/>
       </geometry>
       <material name="black"/>
     </visual>
 
     <inertial>
-      <origin xyz="0 0 ${height1/2}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${link1_height/2}" rpy="0 0 0"/>
       <mass value="${mass}"/>
       <inertia
-          ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
-          iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
-          izz="${mass / 12.0 * (width*width + width*width)}"/>
+          ixx="${mass / 12.0 * (link_width*link_width + link1_height*link1_height)}" ixy="0.0" ixz="0.0"
+          iyy="${mass / 12.0 * (link1_height*link1_height + link_width*link_width)}" iyz="0.0"
+          izz="${mass / 12.0 * (link_width*link_width + link_width*link_width)}"/>
     </inertial>
   </link>
 
-  <joint name="joint1" type="continuous">
-    <parent link="link1"/>
-    <child link="link2"/>
-    <origin xyz="0 ${width} ${height1 - axel_offset}" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <dynamics damping="0.7"/>
+  <!-- joint0 -->
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="${link1_name}"/>
   </joint>
 
-  <!-- Acrobat green link -->
-  <link name="link2">
+  <!-- link2 -->
+  <link name="${link2_name}">
     <collision>
-      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${link2_height/2 - axel_offset}" rpy="0 0 0"/>
       <geometry>
-        <box size="${width} ${width} ${height2}"/>
+        <box size="${link_width} ${link_width} ${link2_height}"/>
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${link2_height/2 - axel_offset}" rpy="0 0 0"/>
       <geometry>
-        <box size="${width} ${width} ${height2}"/>
+        <box size="${link_width} ${link_width} ${link2_height}"/>
       </geometry>
       <material name="green"/>
     </visual>
 
     <inertial>
-      <origin xyz="0 0 ${height2/2 - axel_offset}" rpy="0 0 0"/>
+      <origin xyz="0 0 ${link2_height/2 - axel_offset}" rpy="0 0 0"/>
       <mass value="${mass}"/>
       <inertia
-          ixx="${mass / 12.0 * (width*width + height2*height2)}" ixy="0.0" ixz="0.0"
-          iyy="${mass / 12.0 * (height2*height2 + width*width)}" iyz="0.0"
-          izz="${mass / 12.0 * (width*width + width*width)}"/>
+          ixx="${mass / 12.0 * (link_width*link_width + link2_height*link2_height)}" ixy="0.0" ixz="0.0"
+          iyy="${mass / 12.0 * (link2_height*link2_height + link_width*link_width)}" iyz="0.0"
+          izz="${mass / 12.0 * (link_width*link_width + link_width*link_width)}"/>
     </inertial>
   </link>
 
-  <joint name="camera_joint" type="fixed">
-    <axis xyz="0 1 0" />
-    <origin xyz="${camera_link} 0 ${height2 - axel_offset*2}" rpy="0 0 0"/>
-    <parent link="link2"/>
-    <child link="camera_link"/>
+  <!-- joint1 -->
+  <joint name="${link1_name}_to_${link2_name}_joint" type="revolute">
+    <parent link="${link1_name}"/>
+    <child link="${link2_name}"/>
+    <origin xyz="0 ${link_width} ${link1_height - axel_offset}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+    <limit effort="1000.0" lower="${joint_lower_limit}" upper="${joint_upper_limit}" velocity="0.5"/>
   </joint>
 
-  <!-- dummy link to get a tf at the end of link2 -->
-  <link name="link3" />
-
-  <!-- dummy fixed joint to get a tf at the end of link2 (for reward calculation purposes -> learning stuff) -->
-  <joint name="link3_joint" type="fixed">
-    <axis xyz="0 0 1" />
-    <origin xyz="0 0 ${height2}" rpy="0 0 0"/>
-    <parent link="link2"/>
-    <child link="link3"/>
-  </joint>
-
-  <!-- if link3 matches exactly with this one, then reward of the acrobat is maximum -->
-  <link name="goal_link" />
-
-  <joint name="goal_link_joint" type="fixed">
-    <axis xyz="0 0 1" />
-    <origin xyz="0 ${width} ${height1 + height2 - axel_offset}" rpy="0 0 0"/>
-    <parent link="link1"/>
-    <child link="goal_link"/>
-  </joint>
-
-  <!-- Camera -->
-  <link name="camera_link">
+  <!-- link3 -->
+  <link name="${link3_name}">
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 ${link3_height/2 - axel_offset}" rpy="0 0 0"/>
       <geometry>
-        <box size="${camera_link} ${camera_link} ${camera_link}"/>
+        <box size="${link_width} ${link_width} ${link3_height}"/>
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 ${link3_height/2 - axel_offset}" rpy="0 0 0"/>
       <geometry>
-        <box size="${camera_link} ${camera_link} ${camera_link}"/>
+        <box size="${link_width} ${link_width} ${link3_height}"/>
       </geometry>
-      <material name="grey"/>
+      <material name="green"/>
     </visual>
 
     <inertial>
-      <mass value="1e-5" />
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+      <origin xyz="0 0 ${link3_height/2 - axel_offset}" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <inertia
+          ixx="${mass / 12.0 * (link_width*link_width + link3_height*link3_height)}" ixy="0.0" ixz="0.0"
+          iyy="${mass / 12.0 * (link3_height*link3_height + link_width*link_width)}" iyz="0.0"
+          izz="${mass / 12.0 * (link_width*link_width + link_width*link_width)}"/>
     </inertial>
   </link>
 
-  <!-- generate an optical frame http://www.ros.org/reps/rep-0103.html#suffix-frames
-      so that ros and opencv can operate on the camera frame correctly -->
-  <joint name="camera_optical_joint" type="fixed">
-    <!-- these values have to be these values otherwise the gazebo camera image
-        won't be aligned properly with the frame it is supposedly originating from -->
-    <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
-    <parent link="camera_link"/>
-    <child link="camera_link_optical"/>
+  <!-- joint2 -->
+  <joint name="${link2_name}_to_${link3_name}_joint" type="revolute">
+    <parent link="${link2_name}"/>
+    <child link="${link3_name}"/>
+    <origin xyz="0 ${link_width} ${link2_height - axel_offset}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+    <limit effort="${joint_effort}" lower="${joint_lower_limit}" upper="${joint_upper_limit}" velocity="${joint_velocity}"/>
   </joint>
+  
+  <!-- arm transmission macro (needed to actuate joints in gazebo simulator via ROS control) -->
+  <xacro:macro name="arm_transmission_macro" params="joint_name">
+    <transmission name="${joint_name}_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${joint_name}">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${joint_name}_actuator">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
 
-  <link name="camera_link_optical">
-  </link>
+  <!-- joint1 -->
+  <xacro:arm_transmission_macro joint_name="${link1_name}_to_${link2_name}_joint" />
 
-  <transmission name="tran1">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="joint1">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="motor1">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
+  <!-- joint2 -->
+  <xacro:arm_transmission_macro joint_name="${link2_name}_to_${link3_name}_joint" />
+
+  <!-- gazebo related tags -->
+  <xacro:include filename="$(find acrobat_description)/urdf/acrobat_gazebo.urdf.xacro" />
 
 </robot>
