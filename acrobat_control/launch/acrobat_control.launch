@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- the location of the control parameters -->
+    <arg name="ctrl_config_base_path" default="$(find acrobat_control)/config" />
+
+    <!-- load base, neck, head cam and joint state parameters to param server -->
+    <rosparam file="$(arg ctrl_config_base_path)/joint_state_control.yaml" command="load" />
+
+    <!-- spawn joint state controllers -->
+    <node pkg="controller_manager" type="spawner" name="basic_ctrl_spawner"
+          output="screen" args="joint_state_controller" />
+
+    <!-- upload position controller params to param server -->
+    <rosparam file="$(arg ctrl_config_base_path)/position_control.yaml" command="load" />
+    <!-- load (but do not start) position controller -->
+    <node pkg="controller_manager" type="spawner" name="pos_ctrl_spawner"
+            output="screen" args="--stopped
+                                  left_arm_joint1_position_controller
+                                  left_arm_joint2_position_controller" />
+
+    <!-- upload velocity controller params to param server -->
+    <rosparam file="$(arg ctrl_config_base_path)/velocity_control.yaml" command="load" />
+    <!-- load (but do not start) velocity controller -->
+    <node pkg="controller_manager" type="spawner" name="vel_ctrl_spawner"
+            output="screen" args="--stopped
+                                  joint0_velocity_controller
+                                  joint1_velocity_controller" />
+
+    <!-- upload trajectory controller params to param server -->
+    <rosparam file="$(arg ctrl_config_base_path)/trajectory_control.yaml" command="load" />
+    <!-- load and start trajectory controller -->
+    <node pkg="controller_manager" type="spawner" name="traj_ctrl_spawner"
+            output="screen" args="traj_controller" />
+
+</launch>
