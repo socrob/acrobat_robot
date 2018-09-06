@@ -5,7 +5,7 @@
   <xacro:property name="PI" value="3.141592653589793" />
 
   <!-- link properties -->
-  <xacro:property name="link_mass" value="1" /> <!-- arbitrary value for mass -->
+  <xacro:property name="link_mass" value="0.1" /> <!-- arbitrary value for mass -->
   <xacro:property name="link_width" value="0.1" /> <!-- link square dimensions (link_widthxlink_width) -->
   
   <!-- link1 properties -->
@@ -58,10 +58,10 @@
 
   <!-- joint macro -->
   <xacro:macro name="joint_macro" params="joint_name parent_link child_link parent_link_height">
-    <joint name="${parent_link}_to_${child_link}_joint" type="revolute">
+    <joint name="${joint_name}" type="revolute">
       <parent link="${parent_link}"/>
       <child link="${child_link}"/>
-      <origin xyz="${parent_link_height} 0 ${parent_link_height - link_width / 2.0}" rpy="0 0 0"/>
+      <origin xyz="${parent_link_height} 0 ${link_width}" rpy="0 0 0"/>
       <axis xyz="0 0 1"/>
       <dynamics damping="0.7"/>
       <limit effort="${joint_effort}" lower="${joint_lower_limit}" upper="${joint_upper_limit}" velocity="${joint_velocity}"/>
@@ -80,14 +80,23 @@
 
   <!-- link 0, 1 -->
   <link name="world"/>
-  <link name="dummy_link"/>
+  <link name="dummy_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${link_mass}"/>
+      <inertia
+        ixx="0.001" ixy="0.0" ixz="0.0"
+        iyy="0.001" iyz="0.0"
+        izz="0.001"/>
+    </inertial>
+  </link>
   
   <!-- links 2, 3 -->
   <xacro:link_macro link_name="${link1_name}" link_height="${link1_height}" link_color="${link1_color}" />
   <xacro:link_macro link_name="${link2_name}" link_height="${link2_height}" link_color="${link2_color}" />
 
   <!-- joint0 -->
-  <joint name="fixed" type="fixed">
+  <joint name="joint0" type="fixed">
     <parent link="world"/>
     <child link="dummy_link"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>

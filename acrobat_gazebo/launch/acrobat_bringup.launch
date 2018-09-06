@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- visualize gazebo world in gui interface (consumes more resources) -->
+  <arg name="gazebo_gui" default="true" />
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" >
+    <arg name="world_name" value="$(find acrobat_gazebo)/worlds/acrobat.world" />
+    <arg name="debug" value="false" />
+    <arg name="gui" value="$(arg gazebo_gui)" />
+    <arg name="paused" value="false" />
+    <arg name="use_sim_time" value="true" />
+    <arg name="headless" value="false" />
+  </include>
+
+  <!-- Load the URDF model into the ROS Parameter Server -->
+  <param name="robot_description"
+         command="$(find xacro)/xacro --inorder '$(find acrobat_description)/urdf/acrobat_robot.urdf.xacro'" />
+
+  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner" respawn="false" output="screen"
+        args="-urdf -model acrobat -param robot_description" />
+
+  <!-- run ros control -->
+  <include file="$(find acrobat_control)/launch/acrobat_control.launch" />
+  
+  <!-- map joint states to TF transforms based on URDF model -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher"
+        name="robot_state_publisher" output="screen" />
+
+</launch>
