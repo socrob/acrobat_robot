@@ -15,7 +15,8 @@
     <rosparam file="$(arg ctrl_config_base_path)/position_control.yaml" command="load" />
     <!-- load (but do not start) position controller -->
     <node pkg="controller_manager" type="spawner" name="pos_ctrl_spawner"
-          output="screen" args="joint1_position_controller
+          output="screen" args="--stopped
+                                joint1_position_controller
                                 joint2_position_controller" />
 
     <!-- upload velocity controller params to param server -->
@@ -23,13 +24,13 @@
     <!-- load (but do not start) velocity controller -->
     <node pkg="controller_manager" type="spawner" name="vel_ctrl_spawner"
           output="screen" args="--stopped
-                                joint0_velocity_controller
-                                joint1_velocity_controller" />
+                                joint1_velocity_controller
+                                joint2_velocity_controller" />
 
     <!-- upload trajectory controller params to param server -->
     <rosparam file="$(arg ctrl_config_base_path)/trajectory_control.yaml" command="load" />
     <!-- load and start trajectory controller -->
     <node pkg="controller_manager" type="spawner" name="traj_ctrl_spawner"
-          output="screen" args="--stopped traj_controller" />
+          output="screen" args="traj_controller" />
 
 </launch>

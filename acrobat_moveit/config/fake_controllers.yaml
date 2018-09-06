@@ -1,0 +1,5 @@
+controller_list:
+  - name: fake_acrobat_controller
+    joints:
+      - joint1
+      - joint2

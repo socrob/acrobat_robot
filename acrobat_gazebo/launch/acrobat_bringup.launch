@@ -2,7 +2,7 @@
 <launch>
 
   <!-- visualize gazebo world in gui interface (consumes more resources) -->
-  <arg name="gazebo_gui" default="true" />
+  <arg name="gazebo_gui" default="false" />
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch" >
@@ -18,9 +18,11 @@
   <param name="robot_description"
          command="$(find xacro)/xacro --inorder '$(find acrobat_description)/urdf/acrobat_robot.urdf.xacro'" />
 
-  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-  <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner" respawn="false" output="screen"
-        args="-urdf -model acrobat -param robot_description" />
+  <!-- spawn acrobat robot -->
+  <node pkg="gazebo_ros" type="spawn_model" name="acrobat_spawner"
+        args="-package_to_model -urdf -model acrobat -param robot_description
+              -J joint1 0.0
+              -J joint2 0.0" />
 
   <!-- run ros control -->
   <include file="$(find acrobat_control)/launch/acrobat_control.launch" />

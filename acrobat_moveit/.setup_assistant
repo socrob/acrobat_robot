@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: acrobat_description
+    relative_path: urdf/acrobat_robot.urdf.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/acrobat.srdf
+  CONFIG:
+    author_name: Oscar Lima
+    author_email: olima@isr.tecnico.ulisboa.pt
+    generated_timestamp: 1536263875
