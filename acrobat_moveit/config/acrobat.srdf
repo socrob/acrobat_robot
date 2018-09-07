@@ -13,6 +13,10 @@
         <joint name="joint1" />
         <joint name="joint2" />
     </group>
+    <group_state name="candle" group="acrobat">
+        <joint name="joint1" value="0.0" />
+        <joint name="joint2" value="0.0" />
+    </group_state>
     <group_state name="c" group="acrobat">
         <joint name="joint1" value="0.0" />
         <joint name="joint2" value="0.45" />
