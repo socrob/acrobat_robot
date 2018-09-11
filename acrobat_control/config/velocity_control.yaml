@@ -1,7 +1,7 @@
 joint1_velocity_controller:
     type: velocity_controllers/JointVelocityController
     joint: joint1
-    pid: {p: &p_gain 50000.0, i: &i_gain 0.01, d: &d_gain 5.0, i_clamp: &i_clamp 0.0}
+    pid: {p: &p_gain 10.0, i: &i_gain 0.0, d: &d_gain 0.0, i_clamp: &i_clamp 0.0}
 
 joint2_velocity_controller:
     type: velocity_controllers/JointVelocityController

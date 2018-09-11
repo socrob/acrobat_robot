@@ -8,17 +8,17 @@ traj_controller:
       - joint2
 
     gains:
-      joint1: {p: 100.0, i: 0.01, d: 0.0, i_clamp: 1}
-      joint2: {p: 100.0, i: 0.01, d: 0.0, i_clamp: 1}
+      joint1: {p: 500.0, i: 0.1, d: 1.0, i_clamp: 10}
+      joint2: {p: 500.0, i: 0.1, d: 1.0, i_clamp: 10}
 
     constraints:
-      goal_time: 4.0
-      stopped_velocity_tolerance: 1.0
+      goal_time: 5.0
+      stopped_velocity_tolerance: 2.0
       joint1:
-        goal: 0.5
-        trajectory: 1.0
+        goal: 0.7
+        trajectory: 1.5
       joint2:
-        goal: 0.5
-        trajectory: 1.0
+        goal: 0.7
+        trajectory: 1.5
 
-    stop_trajectory_duration: 1.0
+    stop_trajectory_duration: 2.0

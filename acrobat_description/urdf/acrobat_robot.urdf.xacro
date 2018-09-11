@@ -62,8 +62,8 @@
       </collision>
 
       <!-- use macro to compute inertia-->
-      <xacro:box_inertial_with_origin x="${link_height}" y="${link_width}" z="${link_width}" mass="${link_mass}" >
-        <origin xyz="${link_height/2} 0 0" rpy="0 0 0" />
+      <xacro:box_inertial_with_origin x="${link_width}" y="${link_width}" z="${link_width}" mass="${link_mass}" >
+        <origin xyz="0 0 0" rpy="0 0 0" />
       </xacro:box_inertial_with_origin>
     </link>
   </xacro:macro>
@@ -102,7 +102,7 @@
   <joint name="joint0" type="fixed">
     <parent link="world"/>
     <child link="${link1_name}"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <origin xyz="0 0 0.5" rpy="0 0 0"/>
   </joint>
 
   <!-- joints 1, 2 -->
