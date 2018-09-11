@@ -27,8 +27,7 @@
   <xacro:property name="joint_lower_limit" value="${-PI / 2.0}" />
   <xacro:property name="joint_upper_limit" value="${PI / 2.0}" />
   <xacro:property name="joint_effort" value="100.0" />
-  <xacro:property name="joint_velocity" value="100.0" />
-  <xacro:property name="joint_damping" value="0.7" />
+  <xacro:property name="joint_velocity" value="1.0" />
 
   <!-- Import Rviz colors -->
   <xacro:include filename="$(find acrobat_description)/urdf/materials.urdf.xacro" />
@@ -76,14 +75,14 @@
       <parent link="${parent_link}"/>
       <child link="${child_link}"/>
       <axis xyz="0 0 1"/>
-      <dynamics damping="${joint_damping}"/>
+      <!--<dynamics damping="10.0" friction="10.0"/>-->
       <limit effort="${joint_effort}" lower="${joint_lower_limit}" upper="${joint_upper_limit}" velocity="${joint_velocity}"/>
     </joint>
 
     <transmission name="${joint_name}_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${joint_name}">
-        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
       </joint>
       <actuator name="${joint_name}_actuator">
         <mechanicalReduction>1</mechanicalReduction>
